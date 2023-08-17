@@ -1,81 +1,55 @@
-// const User = require('../model/User');
-import *as User from '../model/User.js'
+const login = require('../model/user')
 
+exports.main=(req,res)=>{
+    res.render('index')
+}
 
-export const index = (req, res) => {
-    res.render('index');
-};
-export const signup = (req, res) => {
-    res.render('signup');
-};
-export const post_signup = async(req, res) => {
-    try {
-        await User.post_signup(req.body)
+exports.getSignin = (req,res)=>{
+    res.render('signin')
+}
+
+exports.getSignup = (req,res)=>{
+    res.render('signup')
+}
+
+exports.postProfile = (req,res)=>{
+    res.render('profile', {data:req.body})
+}
+
+exports.postSignup = (req,res)=>{
+    login.postsignup = (req.body,(rows)=>{
+        res.send({ userid: req.body.userid, name: req.body.name, pw: req.body.pw });
+    })   
+}
+
+exports.postSignin = (req,res)=>{
+    login.postSignin(req.body,(rows)=>{
+        const id = req.body.userid
+        const pw = req.body.pw
+        for(let i =0; i<rows.length;i++){
+            console.log(rows[i].userid)
+            if(rows[i].userid == id && rows[i].pw == pw){
+                res.send({result:true})
+                return 
+            }
+        }res.send({result:false})
+    })
+    
+    
+}
+
+exports.editInfo = (req,res)=>{
+    login.editInfo((rows)=>{
         res.send({result:true})
-    } catch (error) {
-        console.log(err)
-    }
-};
+    })
+}
 
-export const signin = (req, res) => {
-    res.render('signin');
-};
-
-export const post_signin = async (req, res) => {
-    //model
-    try {
-        const result = await User.post_signin(req.body) 
-        if (result.length > 0) {
-            res.send({ result: true, data: result[0] });
-        } else {
-            res.send({ result: false, data: null });
-        }
-    } catch (error) {
-        console.log(error)
-    }
-    // User.post_signin(req.body, (result) => {
-    //     if (result.length > 0) {
-    //         res.send({ result: true, data: result[0] });
-    //     } else {
-    //         res.send({ result: false, data: null });
-    //     }
-    // });
-};
-
-export const post_profile = async(req, res) => {
-    try {
-        const result = await User.post_profile(req.body)
-        res.render('profile',{data: result[0]})
-    } catch (error) {
-        console.log(error)    
-    }
-    User.post_profile(req.body, (result) => {
-        if (result.length > 0) {
-            res.render('profile', { data: result[0] });
-        }
-    });
-};
-
-export const edit_profile = async(req, res) => {
-    try {
-        await User.edit_profile(req.body)
-        res.send({result:true})
-    } catch (error) {
-        console.log(error)
-    }
-    // User.edit_profile(req.body, () => {
-    //     res.send({ result: true });
-    // });
-};
-
-export const delete_profile = async(req, res) => {
-    try {
-        await User.delete_profile(req.body.id)
-        res.send({result:true})
-    } catch (error) {
-        console.log(error)
-    }
-    User.delete_profile(req.body.id, () => {
-        res.send({ result: true });
-    });
-};
+// exports.deleteInfo = (req,res)=>{
+//     const query = `delete from prac1 where userid="${req.body.userid}"`
+//     conn.query(query,(err,rows)=>{
+//         if(err){
+//             return
+//         }
+//         res.send({result:true})
+//     })
+// }
