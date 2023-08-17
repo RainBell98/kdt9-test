@@ -1,21 +1,20 @@
-const express = require('express')
-const router = express.Router()
-const controller = require('../controller/cUser')
+const express = require('express');
+const controller = require('../controller/Cuser');
+const router = express.Router();
 
-router.get('/',controller.main)
+router.get('/', controller.index);
+//GET localhost:8000/user/signup
+router.get('/signup', controller.signup);
+//POST localhost:8000/user/signup
+router.post('/signup', controller.post_signup);
 
-router.get('/signin',controller.getSignin)
+router.get('/signin', controller.signin);
+router.post('/signin', controller.post_signin);
 
-router.get('/signup',controller.getSignup)
+router.post('/profile', controller.post_profile);
+router.patch('/profile/edit', controller.edit_profile);
+router.delete('/profile/delete', controller.delete_profile);
 
-router.post('/profile',controller.postProfile)
+router.get('/findAll',controller.findAll)
 
-router.post('/user/signup',controller.postSignup)
-
-router.post('/user/signin',controller.postSignin)
-
-// router.patch('/profile/patch', controller.editInfo)
-
-// router.delete('/profile/delete',controller.deleteInfo)
-
-module.exports = router
+module.exports = router;

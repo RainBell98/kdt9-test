@@ -1,55 +1,55 @@
-const mysql = require('mysql')
+const mysql = require('mysql');
 
+//mysql 연결
 const conn = mysql.createConnection({
-    host:'kdt-9-test-woo.cmhyp4kdkfku.ap-southeast-2.rds.amazonaws.com',
-    user: 'admin',
-    password: '12341234',
+    host: 'localhost',
+    user: 'news',
+    password: '1234',
     database: 'kdt9',
-    // port:3306
-})
-conn.connect((err)=>{
-    if(err){
-        console.log('error')
-        return
+    // port: 3306,
+});
+conn.connect((err) => {
+    if (err) {
+        console.log(err);
+        return;
     }
-    console.log('connect')
-})
+    console.log('connect');
+});
 
-exports.postsignup = (data,callback)=>{
-    const query = `insert into prac1 (userid,name,pw) values ("${data.userid}","${data.name}","${data.pw}")`
+exports.post_signup = (data, callback) => {
+    const query = `INSERT INTO user (userid, pw, name) VALUES ('${data.userid}', '${data.pw}', '${data.name}')`;
     conn.query(query, (err, rows) => {
-        console.log('rows', rows);
-        if(err){
-            console.log("Error")
-            return
-        }callback()
+        console.log('post_signup', rows);
+        callback();
     });
-}
+};
 
-exports.postSignin = (data,callback)=>{
-    const query = `SELECT * FROM prac1`
-    conn.query(query,(err,rows)=>{
-        console.log(id)
-        if(err){
-            console.log("Error")
-            return
-        }callback()
-    })
-}
+exports.post_signin = (data, callback) => {
+    const query = `SELECT * FROM user WHERE userid='${data.userid}' AND pw='${data.pw}'`;
+    conn.query(query, (err, rows) => {
+        console.log('post_signin', rows);
+        callback(rows);
+    });
+};
 
-exports.editInfo = (callback)=>{
-    const query = `update prac1 set userid = '${req.body.change}' where userid = '${req.body.name}'`
-    conn.query(query,(err,rows)=>{
-        if(err){
-            console.log(err)
-            return
-        }
-        callback()
-    })
-}
+exports.post_profile = (data, callback) => {
+    const query = `SELECT * FROM user WHERE userid='${data.userid}' `;
+    conn.query(query, (err, rows) => {
+        console.log('post_profile', rows);
+        callback(rows);
+    });
+};
 
+exports.edit_profile = (data, callback) => {
+    const query = `UPDATE user SET userid='${data.userid}', pw='${data.pw}', name='${data.name}' WHERE id=${data.id}  `;
+    conn.query(query, (err, rows) => {
+        callback();
+    });
+};
 
-
-
-
-
+exports.delete_profile = (id, callback) => {
+    const query = `DELETE FROM user WHERE id=${id}`;
+    conn.query(query, (err, rows) => {
+        callback();
+    });
+};
